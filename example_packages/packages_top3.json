@@ -1,0 +1,14 @@
+{
+  "pint": {
+    "type": "pypi",
+    "modules": ["pint"]
+  },
+  "tomlkit": {
+    "type": "pypi",
+    "modules": ["tomlkit"]
+  },
+  "pendulum": {
+    "type": "pypi",
+    "modules": ["pendulum"]
+  }
+}

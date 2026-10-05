@@ -1,0 +1,34 @@
+{
+  "wcwidth": {
+    "type": "pypi",
+    "modules": ["wcwidth"]
+  },
+  "tomlkit": {
+    "type": "pypi",
+    "modules": ["tomlkit"]
+  },
+  "pint": {
+    "type": "pypi",
+    "modules": ["pint"]
+  },
+  "pendulum": {
+    "type": "pypi",
+    "modules": ["pendulum"]
+  },
+  "xmltodict": {
+    "type": "pypi",
+    "modules": ["xmltodict"]
+  },
+  "simpleeval": {
+    "type": "pypi",
+    "modules": ["simpleeval"]
+  },
+  "voluptuous": {
+    "type": "pypi",
+    "modules": ["voluptuous"]
+  },
+  "litellm": {
+    "type": "pypi",
+    "modules": ["litellm"]
+  }
+}

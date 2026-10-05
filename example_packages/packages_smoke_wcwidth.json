@@ -1,0 +1,6 @@
+{
+  "wcwidth": {
+    "type": "pypi",
+    "modules": ["wcwidth"]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "litellm": {
+    "type": "pypi",
+    "modules": ["litellm"]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "colorama": {
+    "type": "pypi",
+    "modules": ["colorama"]
+  }
+}

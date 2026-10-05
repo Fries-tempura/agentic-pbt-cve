@@ -1,0 +1,14 @@
+{
+  "colorama": {
+    "type": "pypi",
+    "modules": [
+      "colorama"
+    ]
+  },
+  "git-url-parse": {
+    "type": "pypi",
+    "modules": [
+      "giturlparse"
+    ]
+  }
+}
