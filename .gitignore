@@ -21,5 +21,6 @@ scoring_results.csv
 
 # 未经协调披露的漏洞报告 —— agent 在 eml-parser 里找到的几个真 bug,
 # 上游补丁至今未修。仓库公开,故暂不发布;要发布请先知会维护者。
-# 按文件名逐个列规则会漏 —— 已经漏过两份。整个包的报告一律排除。
-runs/*eml*parser*/bug_report_eml_parser_*.md
+# 两次教训:按文件名列会漏,按 runs/<目录>/ 一层列也会漏 —— agent 常自建
+# work/ 或 pbt/ 子目录再往里写。所以不限定路径,按文件名在任意层级匹配。
+bug_report_eml_parser_*.md
