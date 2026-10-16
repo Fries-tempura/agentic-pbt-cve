@@ -71,40 +71,57 @@ Together, these steps help you understand:
 
 ### 3. State the claims
 
-Before proposing any property, write down what the code **claims**, separately from how you
-will test it. These are two different judgements and conflating them hides mistakes in the
-first one behind code in the second.
+Write down what the code **claims**, and how you got there, **before** writing any test.
+Deciding what the code promises and deciding how to check it are two different judgements.
+Merged into one step, a mistake in the first hides behind code written for the second: a
+claim read too weakly still produces a test that passes, and nothing in the output shows
+that the wrong thing was checked.
 
-For each candidate, record:
+**Write these to a file named `claims.md` in the current directory.** Reporting them only
+in your reply is not enough — the file is what makes the reasoning auditable afterwards.
+
+One record per claim:
 
 ```
-CLAIM-n
-  evidence: <file>:<line> — "<the text, quoted verbatim>"
-  source:   docstring | comment | type hint | error message | caller usage | existing test
-            | structure | mathematics
-  claim:    <one sentence: what must hold after the function returns>
+## CLAIM-1
+- evidence: litestar/stores/file.py:23 — "Return a string with all parentheses removed."
+- source:   docstring
+- reading:  The sentence is a postcondition on the return value: it describes the state of
+            the output, not a relationship between repeated calls. "All" admits no
+            exceptions, including unmatched parentheses.
+- claim:    After the call returns, the result contains no '(' and no ')'.
+- strength: Strongest form the evidence supports. A weaker reading ("applying it twice
+            changes nothing") would also be consistent with the first sentence, but it is
+            strictly weaker and would pass on an implementation that leaves parentheses in.
 ```
+
+The five fields, and why each is there:
+
+| field | what goes in it |
+|---|---|
+| `evidence` | Where you read it, and the text **quoted verbatim**. Do not paraphrase. |
+| `source` | One of: docstring, comment, type hint, error message, caller usage, existing test, structure, mathematics |
+| `reading` | **How you got from that text to the claim.** What does it rule out? What does it leave open? This is the step that goes wrong silently, so it is the step that must be written down. |
+| `claim` | One sentence: what must hold after the call returns. |
+| `strength` | Did you state it as strongly as the evidence allows? If you chose a weaker form, say which stronger form you passed over and why. |
 
 Rules:
 
-- **Quote the evidence verbatim.** Do not paraphrase it into the claim.
-- **State the claim in the strongest form the evidence supports.** If a docstring says
-  "returns a string with all parentheses removed", the claim is *"the result contains no
-  parentheses"* — it is **not** "applying it twice changes nothing". A weaker claim is still
-  true, but it will pass on code that violates the documented one, and the test will look
-  green while having checked something else.
+- **State the claim in the strongest form the evidence supports.** A weaker claim is still
+  true, so its test still passes — on code that violates the documented behaviour. The test
+  looks green while having checked something else.
 - If you cannot point at evidence, **do not write a claim**. An invented claim is the main
   source of false alarms.
-- `structure` and `mathematics` are valid sources and need no quote: a function named
-  `encode`/`decode` claims a round trip; a key-to-filename mapping claims injectivity;
-  `abs` claims idempotence. Say which one you are relying on.
-
-Report the claims before moving on. They are the record that makes a later disagreement
-between "what the code promised" and "what you tested" visible.
+- `structure` and `mathematics` need no quote, but still need a `reading`: a function named
+  `encode`/`decode` claims a round trip; a key-to-filename mapping claims injectivity; `abs`
+  claims idempotence. Say which one you are relying on and why it applies here.
+- A claim about *cost* is a claim. "Parses a check string" implies the parse terminates in
+  time proportional to the input, not quadratically or worse. Record it like any other.
 
 ### 4. Turn claims into properties
 
-Once you thoroughly understand the target, look for these high-value property patterns:
+Work from `claims.md`, not from the code again. Each claim is already decided; what is left
+is how to check it. For each claim, name the pattern it fits:
 
 - **Invariants**: `len(filter(x)) <= len(x)`, `set(sort(x)) == set(x)`
 - **Round-trip properties**: `decode(encode(x)) = x`, `parse(format(x)) = x`
@@ -117,7 +134,13 @@ Once you thoroughly understand the target, look for these high-value property pa
 
 If there are no candidate properties in $ARGUMENTS, do not search outside of the specified function, module, or file. Instead, exit with "No testable properties found in $ARGUMENTS".
 
-**Only test properties that the code is explicitly claiming to have.** either in the docstring, comments, or how other code uses it. Do not make up properties that you merely think are true. Proposed properties should be **strongly supported** by evidence.
+**Every property must come from a claim.** If a pattern above suggests something attractive
+that no claim supports, you have found a candidate claim, not a property: go back to step 3,
+look for the evidence, and record it there — or drop it. A property with no claim behind it
+is a guess about the author's intent, and when it fails you cannot tell a bug from a wrong guess.
+
+A claim may fit no pattern on this list. Write the test anyway; the list is a prompt for
+recognition, not the set of things worth checking.
 
 **Function prioritization**: When analyzing a module/file with many functions, focus on:
 - Public API functions (those without leading underscores) with substantive docstrings
@@ -131,9 +154,13 @@ If there are no candidate properties in $ARGUMENTS, do not search outside of the
 
 Write focused Hypothesis property-based tests to test the properties you proposed.
 
-**Every test function's docstring must name the CLAIM it tests**, e.g.
+**Every test function's docstring must start with the CLAIM id it tests**, e.g.
 `"""CLAIM-2: the result contains no parentheses."""`. A test that cannot be traced back to a
-claim should not be written.
+claim in `claims.md` should not be written.
+
+If, while writing the test, you find the claim cannot be expressed as written, **go back and
+amend the claim** — do not quietly test something narrower. Add a line to that record saying
+what you changed and why.
 
 - Use smart Hypothesis strategies - constrain inputs to the domain intelligently
 - Write strategies that are both:

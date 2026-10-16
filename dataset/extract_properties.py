@@ -39,7 +39,53 @@ HERE = Path(__file__).parent
 META = ["cve_id", "package_name", "repo_url", "patch_commit", "affected_ranges"]
 META_OPT = ["vuln_functions", "n_vuln_functions", "clone_path"]
 PROP = ["prop_seq", "prop_file", "prop_name", "prop_statement",
-        "prop_strategy", "prop_assertions", "prop_outcome"]
+        "prop_strategy", "prop_assertions", "prop_outcome",
+        "claim_id", "claim_evidence", "claim_source", "claim_reading", "claim_text"]
+
+CLAIM_HDR = re.compile(r"^##\s*(CLAIM-\d+)", re.M)
+CLAIM_FLD = re.compile(r"^\s*-\s*(evidence|source|reading|claim|strength)\s*:\s*(.*)$")
+
+
+def claim_fields(body: str) -> dict:
+    """Field name -> value, joining the continuation lines a field wraps onto.
+
+    `reading` is the whole point of recording claims at all -- it is the step where a
+    docstring gets read too weakly and the test that follows passes for the wrong reason --
+    and it is also the field long enough to wrap. Keeping only its first line would throw
+    away exactly what we are here to keep.
+    """
+    fields, cur = {}, None
+    for line in body.splitlines():
+        m = CLAIM_FLD.match(line)
+        if m:
+            cur = m.group(1)
+            fields[cur] = [m.group(2)]
+        elif cur and line.strip() and line[:1].isspace():
+            fields[cur].append(line.strip())
+        elif not line.strip():
+            cur = None
+    return {k: " ".join(" ".join(v).split()) for k, v in fields.items()}
+
+
+def read_claims(run_dir: Path) -> dict:
+    """Parse the claims.md that hypo_v2 asks the agent to write.
+
+    Separating "what does the code promise" from "how will I check it" only helps if the
+    first one is recorded: a claim read too weakly still yields a passing test, and the
+    test alone never shows which of the two steps went wrong. Absent on runs made with the
+    original prompt, so every field is optional.
+    """
+    f = run_dir / "claims.md"
+    if not f.exists():
+        return {}
+    text = f.read_text(errors="replace")
+    out, parts = {}, CLAIM_HDR.split(text)
+    for cid, body in zip(parts[1::2], parts[2::2]):
+        rec = {"claim_id": cid}
+        for name, val in claim_fields(body).items():
+            rec[f"claim_{'text' if name == 'claim' else name}"] = val
+        out[cid] = rec
+    return out
 
 
 def transcript_path(run_dir: Path):
@@ -147,9 +193,13 @@ def given_functions(src: str):
     return out
 
 
+CLAIM_REF = re.compile(r"\b(CLAIM-\d+)\b")
+
+
 def collect(run_dir: Path):
     """Properties in first-seen order, deduped on (file, name, assertions)."""
     tp = transcript_path(run_dir)
+    claims = read_claims(run_dir)
     versions, outcomes, todos = replay(tp) if tp else ([], {}, [])
     # The transcript only carries whole-file Writes; anything the agent appended with
     # Edit shows up only on disk. Append the final on-disk state so those are not
@@ -165,6 +215,10 @@ def collect(run_dir: Path):
             seen.add(key)
             p["prop_file"] = fname
             p["prop_outcome"] = outcomes.get(p["prop_name"], "unknown")
+            # hypo_v2 asks each test's docstring to open with the CLAIM it tests
+            m = CLAIM_REF.search(p["prop_statement"])
+            if m and m.group(1) in claims:
+                p.update(claims[m.group(1)])
             props.append(p)
     # keep the files in the order the agent first touched them, and properties in
     # the order they appear within each file -- the Edit-only ones were appended by
@@ -215,7 +269,8 @@ def main():
          "affected_ranges": 17, "vuln_functions": 40, "n_vuln_functions": 3,
          "clone_path": 34, "prop_seq": 3, "prop_file": 30, "prop_name": 38,
          "prop_statement": 60, "prop_strategy": 52, "prop_assertions": 46,
-         "prop_outcome": 7}
+         "prop_outcome": 7, "claim_id": 9, "claim_text": 54,
+         "claim_evidence": 48, "claim_source": 14, "claim_reading": 60}
 
     if args.wide:
         show(table, cols, W)
@@ -228,8 +283,12 @@ def main():
         print(f"{'='*100}")
         print(f"{len(props)} 条 property   ·   transcript: "
               f"{tp.name if tp else '(未找到,已回退到磁盘)'}\n")
-        show(props, PROP[:1] + ["prop_outcome", "prop_file", "prop_name",
-                                "prop_strategy", "prop_assertions", "prop_statement"], W)
+        cols_ = PROP[:1] + ["prop_outcome", "prop_file", "prop_name",
+                            "prop_strategy", "prop_assertions", "prop_statement"]
+        if any(p.get("claim_id") for p in props):
+            cols_ = PROP[:1] + ["prop_outcome", "claim_id", "prop_name",
+                                "claim_text", "prop_assertions"]
+        show(props, cols_, W)
     print()
 
     if args.csv:
