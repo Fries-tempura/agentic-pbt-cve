@@ -1,0 +1,50 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/dataset/checkouts/CVE-2020-7694__uvicorn/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+    ~~~~~~~~~~~~^^
+  File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/envs/uvicorn/lib/python3.14/site-packages/click/core.py", line 1631, in __call__
+    return self.main(*args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/envs/uvicorn/lib/python3.14/site-packages/click/core.py", line 1552, in main
+    rv = self.invoke(ctx)
+  File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/envs/uvicorn/lib/python3.14/site-packages/click/core.py", line 1415, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/envs/uvicorn/lib/python3.14/site-packages/click/core.py", line 910, in invoke
+    return callback(*args, **kwargs)
+  File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/dataset/checkouts/CVE-2020-7694__uvicorn/uvicorn/main.py", line 339, in main
+    run(**kwargs)
+    ~~~^^^^^^^^^^
+  File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/dataset/checkouts/CVE-2020-7694__uvicorn/uvicorn/main.py", line 362, in run
+    server.run()
+    ~~~~~~~~~~^^
+  File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/dataset/checkouts/CVE-2020-7694__uvicorn/uvicorn/main.py", line 390, in run
+    loop.run_until_complete(self.serve(sockets=sockets))
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/dataset/checkouts/CVE-2020-7694__uvicorn/uvicorn/main.py", line 397, in serve
+    config.load()
+    ~~~~~~~~~~~^^
+  File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/dataset/checkouts/CVE-2020-7694__uvicorn/uvicorn/config.py", line 266, in load
+    self.http_protocol_class = import_from_string(HTTP_PROTOCOLS[self.http])
+                               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/dataset/checkouts/CVE-2020-7694__uvicorn/uvicorn/importer.py", line 23, in import_from_string
+    raise exc from None
+  File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/dataset/checkouts/CVE-2020-7694__uvicorn/uvicorn/importer.py", line 20, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/importlib/__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1406, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/dataset/checkouts/CVE-2020-7694__uvicorn/uvicorn/protocols/http/h11_impl.py", line 6, in <module>
+    import h11
+ModuleNotFoundError: No module named 'h11'

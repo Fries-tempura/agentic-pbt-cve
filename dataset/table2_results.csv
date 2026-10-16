@@ -1,0 +1,74 @@
+cve_id,prop_seq,prop_file,prop_name,prop_statement,prop_strategy,prop_assertions,prop_outcome
+CVE-2026-34591,1,test_wheel_installer_pbt.py,test_installed_files_stay_inside_scheme_dirs,,given(member_path),any((f.resolve().is_relative_to(d) for d in scheme_dirs)),failed
+CVE-2025-43859,1,test_readers.py,test_chunked_roundtrip_any_split,,"given(chunks_st, st.lists(st.integers(min_value=0, max_value=10000)))",done ; data == b''.join(chunks) ; rest == b'',passed
+CVE-2025-43859,2,test_readers.py,test_content_length_roundtrip,,"given(st.binary(max_size=200), st.lists(st.integers(min_value=0, max_value=1000)), st.binary(max_size=20))",done ; data == body ; rest == extra,failed
+CVE-2025-43859,3,test_readers.py,test_chunked_rejects_bad_chunk_terminator,,"given(chunks_st.filter(lambda c: len(c) > 0), st.data(), st.binary(min_size=2, max_size=2).filter(lambda b: b != b'\r\n'))",,failed
+CVE-2023-26112,1,test_validate_props.py,test_num_to_quad_round_trip,Documented inverse pair: dottedQuadToNum / numToDottedQuad.,"given(st.integers(min_value=0, max_value=MAXIP))",dottedQuadToNum(numToDottedQuad(n)) == n,passed
+CVE-2023-26112,2,test_validate_props.py,test_quad_to_num_round_trip,,"given(st.lists(st.integers(min_value=0, max_value=255), min_size=4, max_size=4))",numToDottedQuad(dottedQuadToNum(s)) == s,passed
+CVE-2023-26112,3,test_validate_props.py,test_is_integer_string_round_trip,"'If the value is a string, then the conversion is done'.",given(st.integers()),is_integer(str(n)) == n,passed
+CVE-2023-26112,4,test_validate_props.py,test_is_float_string_round_trip,,"given(st.floats(allow_nan=False, allow_infinity=False))",is_float(repr(f)) == f,passed
+CVE-2023-26112,5,test_validate_props.py,test_is_float_result_within_bounds,is_float checks 'that it is between bounds' -- so a returned value must be.,"given(st.floats(allow_infinity=True, allow_nan=True), st.floats(allow_nan=False, allow_infinity=False), st.floats(allow_nan=False, allow_infinity=False))",lo <= result <= hi,failed
+CVE-2023-26112,6,test_validate_props.py,test_is_integer_result_within_bounds,,"given(st.integers(), st.integers(), st.integers())",lo <= result <= hi,passed
+CVE-2023-26112,7,test_validate_props.py,test_is_list_length_bounds,,"given(st.lists(st.integers()), st.integers(min_value=0, max_value=20), st.integers(min_value=0, max_value=20))",lo <= len(result) <= hi ; result == list(value),passed
+CVE-2023-26112,8,test_validate_props.py,test_is_string_length_bounds,,"given(st.text(), st.integers(min_value=0, max_value=20), st.integers(min_value=0, max_value=20))",lo <= len(result) <= hi ; result == value,passed
+CVE-2023-26112,9,test_validate_props.py,test_option_round_trip,Every option listed in an option() check must validate as itself.,"given(st.lists(SAFE, min_size=1, max_size=4, unique=True))","v.check(check, o) == o",passed
+CVE-2023-26112,10,test_validate_props.py,test_string_default_round_trip,get_default_value must give back the quoted default verbatim.,given(SAFE),"v.get_default_value('string(default=""%s"")' % text) == text",passed
+CVE-2023-26112,11,test_validate_props.py,test_check_missing_matches_get_default_value,,given(SAFE),"v.check(check, '', missing=True) == v.get_default_value(check)",passed
+CVE-2023-26112,12,test_validate_props.py,test_default_list_is_not_shared_between_calls,Validator caches parsed checks but documents working on *copies* (see _parse_with_caching) -- a list default must not leak between calls.,"given(st.lists(st.text(alphabet=string.ascii_letters + string.digits, min_size=1, max_size=5), min_size=1, max_size=4))",second == expected,failed
+CVE-2023-26112,13,test_validate_props.py,test_bad_arity_raises_vdt_param_error,'A badly formatted set of arguments will raise a VdtParamError.',"given(st.lists(st.integers(min_value=0, max_value=100), min_size=3, max_size=6))",,failed
+CVE-2026-55618,1,test_parser_props.py,test_sliding_window_covers_whole_body,,given(body_strategy),len(covered) >= len(body) ; covered.count(ch) >= body.count(ch),failed
+CVE-2026-55618,2,test_parser_props.py,test_url_found_regardless_of_offset,,"given(st.integers(min_value=0, max_value=2000), st.sampled_from(['https://example.com/path', 'http://foo.example.org/a']))",url in found,passed
+CVE-2026-55618,3,test_parser_props.py,test_decode_email_bytes_does_not_crash,,given(raw_emails()),"isinstance(result, dict) ; 'header' in result",passed
+CVE-2026-55618,4,test_mime_fuzz.py,test_decode_email_bytes_mime,,given(raw_mime_email()),"isinstance(result, dict)",passed
+CVE-2026-55618,5,test_window.py,test_window_ranges_match_implementation,Sanity: the index-tracking clone reproduces the real generator.,given(bodies()),real == clone,passed
+CVE-2026-55618,6,test_window.py,test_window_covers_every_character,P1: no character of the body may be skipped by the slicing.,given(bodies()),not missing,passed
+CVE-2026-55618,7,test_window.py,test_sliced_scan_equals_whole_scan,P2: slicing must not change which URLs are found.,given(bodies()),whole == sliced,passed
+CVE-2026-55618,8,test_bugs.py,test_ipv4_candidate_validated_as_ip,,given(dotted_quad),eml_parser.regexes.ipv4_regex.fullmatch(candidate) ; addr.is_global and (not addr.is_reserved),failed
+CVE-2026-55618,9,test_bugs.py,test_email_force_tld_is_per_instance,,"given(local_part, no_tld_host)",before == after,failed
+CVE-2026-27809,1,test_compression.py,test_roundtrip,,"given(image(), st.sampled_from(list(Compression)), st.sampled_from([1, 2]))","decompress(c, comp, w, h, depth, version) == data",passed
+CVE-2026-27809,2,test_compression.py,test_rle_roundtrip_both,,given(anydata),"bytes(py_rle.encode(data)) == bytes(c_rle.encode(data)) ; bytes(dec(e, len(data))) == data",passed
+CVE-2026-27809,3,test_compression.py,test_decode_equivalence,,"given(st.binary(), st.integers(0, 600))",res[0] == res[1],failed
+CVE-2026-27809,4,test_compression.py,test_decompress_rle_garbage,,"given(st.binary(max_size=200), st.integers(1, 20), st.integers(1, 10), st.sampled_from([8, 16, 32]), st.sampled_from([1, 2]))",len(out) == w * h * depth // 8,failed
+CVE-2026-28348,1,test_clean_pbt.py,test_default_clean_removes_dangerous_content,,"given(st.lists(html_doc(), min_size=1, max_size=3).map(''.join))",,failed
+CVE-2026-28348,2,test_clean_pbt.py,test_clean_output_stable_under_reclean,,"given(st.lists(html_doc(), min_size=1, max_size=3).map(''.join))",,passed
+CVE-2026-28348,3,test_clean_pbt.py,test_clean_without_safe_attrs_only,,"given(st.lists(html_doc(), min_size=1, max_size=3).map(''.join))",,passed
+CVE-2026-28348,4,test_clean_pbt.py,test_wrapped_default_clean_removes_dangerous_content,,given(WRAPPED),,unknown
+CVE-2026-28348,5,test_clean_pbt.py,test_wrapped_reclean,,given(WRAPPED),,unknown
+CVE-2026-28348,6,test_clean_pbt.py,test_wrapped_no_safe_attrs_only,,given(WRAPPED),,unknown
+CVE-2026-25480,1,test_file_store.py,test_set_get_round_trip,Store docstring: get() returns 'The value associated with ``key``'.,"given(key=keys, value=values)",await store.get(key) == value,failed
+CVE-2026-25480,2,test_file_store.py,test_distinct_keys_are_isolated,Distinct keys must map to distinct entries: writing k2 must not clobber k1.,"given(k1=keys, k2=keys, v1=values, v2=values)",await store.get(k1) == v1 ; await store.get(k2) == v2,failed
+CVE-2026-25480,3,test_file_store.py,test_delete_does_not_affect_other_keys,delete(k2) must not remove k1's value when k1 != k2.,"given(k1=keys, k2=keys)",await store.exists(k1) is True,failed
+CVE-2026-25480,4,test_file_store.py,test_safe_file_name_injective,_safe_file_name is the key->filename mapping; it must not collide.,"given(k1=keys, k2=keys)",_safe_file_name(k1) != _safe_file_name(k2),passed
+CVE-2026-25480,5,test_file_store.py,test_exists_false_for_unset_key,,given(key=keys),await store.exists(key) is False,passed
+CVE-2026-25480,6,test_file_store_ascii.py,test_safe_file_name_injective,"The key -> filename mapping must not collide, or keys share storage.","given(k1=ascii_keys, k2=ascii_keys)",_safe_file_name(k1) != _safe_file_name(k2),passed
+CVE-2026-25480,7,test_file_store_ascii.py,test_distinct_keys_are_isolated,Writing k2 must not clobber the value stored under a different key k1.,"given(k1=ascii_keys, k2=ascii_keys, v1=values, v2=values)",await store.get(k1) == v1,failed
+CVE-2026-25480,8,test_file_store_ascii.py,test_delete_does_not_affect_other_keys,delete(k2) is documented to delete 'the value of key' -- only that key.,"given(k1=ascii_keys, k2=ascii_keys)",await store.exists(k1) is True,failed
+CVE-2026-25480,9,test_file_store_ascii.py,test_set_get_round_trip,,"given(key=ascii_keys, value=values)",await store.get(key) == value,failed
+CVE-2026-25480,10,test_file_store_collision.py,test_safe_file_name_injective,,"given(k1=keys, k2=keys)",_safe_file_name(k1) != _safe_file_name(k2),passed
+CVE-2026-25480,11,test_file_store_collision.py,test_distinct_keys_are_isolated,,"given(k1=keys, k2=keys)",await store.get(k1) == b'value-one',failed
+CVE-2026-25480,12,test_file_store_collision.py,test_delete_does_not_affect_other_keys,,"given(k1=keys, k2=keys)",await store.exists(k1) is True,failed
+CVE-2026-25480,13,test_file_store_collision.py,test_safe_file_name_injective_over_set,Distinct keys must produce distinct filenames.,"given(ks=st.lists(keys, unique=True, min_size=2, max_size=8))",len(set(encoded)) == len(ks),failed
+CVE-2026-25480,14,test_file_store_longkey.py,test_set_get_round_trip,,"given(key=url_like_keys, value=st.binary(min_size=1, max_size=16))",await store.get(key) == value,failed
+CVE-2026-25480,15,test_file_store_longkey.py,test_get_never_raises_for_unset_key,get() is documented to return None when the key does not exist.,given(key=url_like_keys),await store.get(key) is None,passed
+CVE-2026-25480,16,test_file_store_longkey.py,test_get_returns_none_for_unset_key,get() is documented to return None when the key does not exist.,given(key=cache_keys()),await store.get(key) is None,unknown
+CVE-2026-25480,17,test_file_store_longkey2.py,test_get_returns_none_for_unset_key,,given(key=cache_keys()),await store.get(key) is None,unknown
+CVE-2026-25480,18,test_file_store_longkey2.py,test_set_get_round_trip,,given(key=cache_keys()),await store.get(key) == b'cached-body',failed
+CVE-2026-86000,1,test_css_parser.py,test_escape_unescape_roundtrip,,given(idents),cp.css_unescape(cp.escape(s)) == s,passed
+CVE-2026-86000,2,test_css_parser.py,test_escaped_id_selector_parses_to_same_id,,given(idents),"sel.selectors[0].ids == (s,)",failed
+CVE-2026-86000,3,test_css_parser.py,test_escaped_class_matches,,given(idents),"sv.select('.' + cp.escape(s), soup) == [soup.div]",passed
+CVE-2026-86000,4,test_css_parser.py,test_nested_selectors_only_raise_documented_errors,,"given(st.lists(WRAP, min_size=1, max_size=600), SIMPLE)",,passed
+CVE-2026-86000,5,test_css_parser.py,test_parser_only_raises_documented_errors,,"given(st.text(alphabet=list('abc*.#[]=:()>~+, ""\'\\-|nof0123') + [':is(', ':not(', ':has(', ':nth-child(', ':lang(', ':contains(', '/**/'], max_size=40))",,failed
+CVE-2024-21503,1,test_strings_pbt.py,test_normalize_string_quotes_preserves_value,,given(string_literals()),literal_value(out) == literal_value(src),failed
+CVE-2024-21503,2,test_strings_pbt.py,test_normalize_string_prefix_preserves_value,,given(string_literals()),literal_value(out) == literal_value(src),failed
+CVE-2024-21503,3,test_strings_pbt.py,test_normalize_unicode_escapes_preserves_value,,given(string_literals()),literal_value(leaf.value) == literal_value(src),passed
+CVE-2024-21503,4,test_strings_pbt.py,test_width_consistency,,given(st.text()),"count_chars_in_width(s, w) == len(s) ; w >= 0",passed
+CVE-2024-21503,5,test_strings_pbt.py,test_leading_tabs_matches_reference,,given(st.text(st.sampled_from(list(' \t\nab\x0c')))),lines_with_leading_tabs_expanded(s) == reference_expand(s),passed
+CVE-2024-21503,6,test_strings_pbt.py,test_leading_tabs_linear_time,,"given(st.integers(min_value=2000, max_value=4000))",time.perf_counter() - start < 0.5,failed
+CVE-2022-39280,1,test_parser_pbt.py,test_index_server_roundtrip,,"given(opt, st.sampled_from(['http', 'https']), st.lists(label, min_size=1, max_size=3), tld, path)",res == (url if url.endswith('/') else url + '/'),passed
+CVE-2022-39280,2,test_parser_pbt.py,test_index_server_private_ip,,"given(st.sampled_from(['10.0.0.5', '192.168.1.10', '127.0.0.1', '172.16.0.3']), st.sampled_from(['', ':8080']))",Parser.parse_index_server('-i ' + url) == url,failed
+CVE-2022-39280,3,test_parser_pbt.py,test_index_server_linear_time,,"given(st.integers(min_value=18, max_value=26), st.sampled_from(['a', 'a-', '1']), st.sampled_from(['!', '_', ' ', '-']))",time.perf_counter() - t0 < 1.0,passed
+CVE-2022-39280,4,test_parser_pbt.py,test_requirements_parse_no_crash,,given(st.text(max_size=200)),,passed
+CVE-2026-4539,1,test_archetype.py,test_roundtrip,,"given(st.text(alphabet=alphabet), st.sampled_from(LEXERS))",out == expected,failed
+CVE-2026-4539,2,test_archetype.py,test_linear_time,,"given(st.integers(500, 3000), st.sampled_from(['a', '0', 'a-']), st.sampled_from(LEXERS))",dt < 2.0,passed
+CVE-2026-4539,3,test_patch_equiv.py,test_patch_equivalent,,given(text),a == b,failed
+CVE-2026-4539,4,test_patch_equiv.py,test_patched_fast,,"given(st.integers(4000, 16000), st.sampled_from(['a', ' ', 'aa-aa-aa.a']))",time.perf_counter() - t < 0.5,passed

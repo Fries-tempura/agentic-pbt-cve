@@ -1,0 +1,86 @@
+run,sample,verdict,sig
+litestar,litestar,hit,collision;collid
+litestar_r2,litestar,hit,collision;collid
+litestar_r3,litestar,hit,collision;collid
+litestar_r4,litestar,hit,collision;collid
+litestar_r5,litestar,hit,collision;collid
+configobj,configobj,hit,redos;backtrack
+configobj_r2,configobj,hit,redos;quadratic
+configobj_r3,configobj,hit,redos;quadratic
+configobj_r4,configobj,hit,redos;quadratic
+configobj_r5,configobj,hit,redos;backtrack
+eml-parser,eml-parser,miss,
+eml-parser_r2,eml-parser,miss,
+eml-parser_r3,eml-parser,miss,
+eml-parser_r4,eml-parser,miss,
+eml-parser_r5,eml-parser,miss,
+pygments,pygments,hit,redos;quadratic
+pygments_r2,pygments,hit,redos;quadratic
+pygments_r3,pygments,hit,redos;quadratic
+pygments_r4,pygments,hit,quadratic
+pygments_r5,pygments,hit,redos;quadratic
+soupsieve,soupsieve,miss,
+soupsieve_r2,soupsieve,miss,
+soupsieve_r3,soupsieve,miss,
+soupsieve_r4,soupsieve,miss,
+soupsieve_r5,soupsieve,miss,
+black,black,hit,redos;backtrack
+black_r2,black,hit,redos;backtrack
+black_r3,black,hit,redos;backtrack
+black_r4,black,hit,redos;backtrack
+black_r5,black,hit,redos;backtrack
+dparse,dparse,miss,
+dparse_r2,dparse,hit,redos;backtrack
+dparse_r3,dparse,hit,redos;quadratic
+dparse_r4,dparse,hit,redos;backtrack
+dparse_r5,dparse,hit,redos;cubic
+h11,h11,hit,terminator;smuggl
+h11_r2,h11,hit,terminator;smuggl
+h11_r3,h11,hit,terminator;smuggl
+h11_r4,h11,hit,terminator;smuggl
+h11_r5,h11,hit,smuggl;chunk
+lxml-html-clean,lxml-html-clean,hit,@import;expression(
+lxml-html-clean_r2,lxml-html-clean,miss,
+lxml-html-clean_r3,lxml-html-clean,hit,@import;expression(
+lxml-html-clean_r4,lxml-html-clean,hit,@import;expression(
+lxml-html-clean_r5,lxml-html-clean,hit,@import;expression(
+psd-tools,psd-tools,hit,size limit;no output limit
+psd-tools_r2,psd-tools,hit,size limit;unbounded
+psd-tools_r3,psd-tools,miss,
+psd-tools_r4,psd-tools,miss,
+psd-tools_r5,psd-tools,miss,
+poetry,poetry,hit,traversal;outside
+poetry_r2,poetry,hit,traversal;outside
+poetry_r3,poetry,hit,traversal;outside
+poetry_r4,poetry,hit,traversal;outside
+poetry_r5,poetry,hit,traversal;outside
+cleo,cleo,hit,redos;backtrack
+cleo_r2,cleo,miss,
+cleo_r3,cleo,miss,
+cleo_r4,cleo,miss,
+cleo_r5,cleo,hit,redos;backtrack
+uvicorn,uvicorn,hit,log injection;inject
+uvicorn_r2,uvicorn,hit,log injection;inject
+uvicorn_r3,uvicorn,hit,log injection;inject
+uvicorn_r4,uvicorn,hit,log injection;inject
+uvicorn_r5,uvicorn,hit,log injection;inject
+python-ldap,python-ldap,hit,escape_dn_chars
+python-ldap_r2,python-ldap,hit,escape_dn_chars
+python-ldap_r3,python-ldap,hit,escape_dn_chars
+python-ldap_r4,python-ldap,hit,escape_dn_chars
+python-ldap_r5,python-ldap,hit,escape_dn_chars
+lxml-html-clean2,lxml-html-clean2,miss,
+lxml-html-clean2_r2,lxml-html-clean2,miss,
+lxml-html-clean2_r3,lxml-html-clean2,miss,
+lxml-html-clean2_r4,lxml-html-clean2,miss,
+lxml-html-clean2_r5,lxml-html-clean2,miss,
+wlc,wlc,hit,certificate;verify=false
+wlc_r2,wlc,hit,certificate;verify=false
+wlc_r3,wlc,hit,certificate;verify=false
+wlc_r4,wlc,hit,certificate;verify=false
+wlc_r5,wlc,hit,certificate;verify=false
+pypdf,pypdf,hit,startxref;unbounded
+pypdf_r2,pypdf,hit,startxref;unbounded
+pypdf_r3,pypdf,hit,startxref;/size
+pypdf_r4,pypdf,hit,startxref;unbounded
+pypdf_r5,pypdf,hit,startxref;unbounded

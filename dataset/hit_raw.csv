@@ -1,0 +1,116 @@
+run,cve_id,package,ran,n_reports,cve_named,funcs_named,defect_words,verdict
+litestar,CVE-2026-25480,litestar,True,2,True,_safe_file_name,collid;collision;normaliz,hit
+litestar_r2,CVE-2026-25480,litestar,True,2,False,_safe_file_name,collid;collision;normaliz,hit
+litestar_r3,CVE-2026-25480,litestar,True,2,True,_safe_file_name,collid;collision;normaliz,hit
+litestar_r4,CVE-2026-25480,litestar,True,1,False,_safe_file_name,collid;collision;normaliz,hit
+litestar_r5,CVE-2026-25480,litestar,True,1,False,_safe_file_name,collid;collision;normaliz,hit
+configobj,CVE-2023-26112,configobj,True,3,True,Validator,backtrack;catastrophic;redos,hit
+configobj_r2,CVE-2023-26112,configobj,True,2,True,Validator,quadratic;redos;slow,hit
+configobj_r3,CVE-2023-26112,configobj,True,1,True,Validator,backtrack;catastrophic;denial of service,hit
+configobj_r4,CVE-2023-26112,configobj,True,2,True,Validator,backtrack;denial of service;linear time,hit
+configobj_r5,CVE-2023-26112,configobj,True,1,True,Validator,backtrack;catastrophic;denial of service,hit
+eml-parser,CVE-2026-55618,eml-parser,True,2,False,header_fetch_parse;__init__;parse_email,decod;encod,hit
+eml-parser_r2,CVE-2026-55618,eml-parser,True,0,False,,decod,miss
+eml-parser_r3,CVE-2026-55618,eml-parser,True,1,False,,decod;encod,miss
+eml-parser_r4,CVE-2026-55618,eml-parser,True,0,False,__init__,decod;encod,hit
+eml-parser_r5,CVE-2026-55618,eml-parser,True,0,False,,decod,miss
+pygments,CVE-2026-4539,pygments,True,1,False,AtomsLexer;AdlLexer,denial of service;linear time;quadratic,hit
+pygments_r2,CVE-2026-4539,pygments,True,1,False,AtomsLexer;AdlLexer,linear time;quadratic;redos,hit
+pygments_r3,CVE-2026-4539,pygments,True,1,False,AtomsLexer;AdlLexer,backtrack;quadratic;redos,hit
+pygments_r4,CVE-2026-4539,pygments,True,0,False,AdlLexer,denial of service;quadratic;slow,hit
+pygments_r5,CVE-2026-4539,pygments,True,1,False,AtomsLexer;AdlLexer,quadratic;redos;slow,hit
+soupsieve,CVE-2026-86000,soupsieve,True,2,False,,,miss
+soupsieve_r2,CVE-2026-86000,soupsieve,True,3,False,,,miss
+soupsieve_r3,CVE-2026-86000,soupsieve,True,3,False,,,miss
+soupsieve_r4,CVE-2026-86000,soupsieve,True,3,False,,,miss
+soupsieve_r5,CVE-2026-86000,soupsieve,True,2,True,,,hit
+black,CVE-2024-21503,black,True,1,True,lines_with_leading_tabs_expanded,backtrack;catastrophic;cubic,hit
+black_r2,CVE-2024-21503,black,True,2,True,lines_with_leading_tabs_expanded,backtrack;catastrophic;cubic,hit
+black_r3,CVE-2024-21503,black,True,1,True,lines_with_leading_tabs_expanded,backtrack;catastrophic;cubic,hit
+black_r4,CVE-2024-21503,black,True,2,True,lines_with_leading_tabs_expanded,backtrack;catastrophic;cubic,hit
+black_r5,CVE-2024-21503,black,True,1,True,lines_with_leading_tabs_expanded,backtrack;cubic;denial of service,hit
+dparse,CVE-2022-39280,dparse,True,0,True,,denial of service;slow,hit
+dparse_r2,CVE-2022-39280,dparse,True,1,False,,backtrack;catastrophic;exponential,miss
+dparse_r3,CVE-2022-39280,dparse,True,1,True,,backtrack;denial of service;quadratic,hit
+dparse_r4,CVE-2022-39280,dparse,True,1,True,,backtrack;catastrophic;denial of service,hit
+dparse_r5,CVE-2022-39280,dparse,True,1,True,,cubic;denial of service;linear time,hit
+h11,CVE-2025-43859,h11,True,1,True,__init__,chunk;content-length;smuggl,hit
+h11_r2,CVE-2025-43859,h11,True,1,True,__init__,chunk;content-length;smuggl,hit
+h11_r3,CVE-2025-43859,h11,True,1,True,,chunk;content-length;smuggl,hit
+h11_r4,CVE-2025-43859,h11,True,1,True,,chunk;content-length;smuggl,hit
+h11_r5,CVE-2025-43859,h11,True,0,True,,chunk;smuggl,hit
+lxml-html-clean,CVE-2026-28348,lxml-html-clean,True,1,False,Cleaner,encod,hit
+lxml-html-clean_r2,CVE-2026-28348,lxml-html-clean,True,1,False,Cleaner,encod,hit
+lxml-html-clean_r3,CVE-2026-28348,lxml-html-clean,True,0,False,Cleaner,,miss
+lxml-html-clean_r4,CVE-2026-28348,lxml-html-clean,True,0,False,_has_sneaky_javascript,decod;entit;escap,hit
+lxml-html-clean_r5,CVE-2026-28348,lxml-html-clean,True,0,False,_has_sneaky_javascript,decod;escap,hit
+psd-tools,CVE-2026-27809,psd-tools,True,0,False,compress;decompress;decode,memory;size limit,hit
+psd-tools_r2,CVE-2026-27809,psd-tools,True,0,False,compress;decompress;decode,bomb;memory;size limit,hit
+psd-tools_r3,CVE-2026-27809,psd-tools,True,2,False,compress;decompress;decode,,miss
+psd-tools_r4,CVE-2026-27809,psd-tools,True,2,False,compress;decompress;decode,memory,hit
+psd-tools_r5,CVE-2026-27809,psd-tools,True,1,False,compress;decompress;decode,,miss
+poetry,CVE-2026-34591,poetry,True,1,False,write_to_fs,../;escape;outside,hit
+poetry_r2,CVE-2026-34591,poetry,True,0,False,write_to_fs,../;outside;traversal,hit
+poetry_r3,CVE-2026-34591,poetry,True,1,False,write_to_fs,../;outside;traversal,hit
+poetry_r4,CVE-2026-34591,poetry,True,1,False,write_to_fs,../;escape;outside,hit
+poetry_r5,CVE-2026-34591,poetry,True,1,True,write_to_fs,../;escape;outside,hit
+cleo,CVE-2022-42966,cleo,True,3,True,_render_cell,backtrack;catastrophic;denial of service,hit
+cleo_r2,CVE-2022-42966,cleo,True,1,False,,,miss
+cleo_r3,CVE-2022-42966,cleo,True,0,False,,,miss
+cleo_r4,CVE-2022-42966,cleo,True,1,False,_render_cell,,miss
+cleo_r5,CVE-2022-42966,cleo,True,2,False,_render_cell,backtrack;catastrophic;exponential,hit
+uvicorn,CVE-2020-7694,uvicorn,True,1,True,get_path;AccessFormatter;get_full_path,decod;escap;unescape,hit
+uvicorn_r2,CVE-2020-7694,uvicorn,True,1,True,get_path;AccessFormatter;get_full_path;get_path_with_query_string,decod;encod;escap,hit
+uvicorn_r3,CVE-2020-7694,uvicorn,True,1,True,get_path;AccessFormatter;get_full_path;get_path_with_query_string,decod;escap;unescape,hit
+uvicorn_r4,CVE-2020-7694,uvicorn,True,1,True,get_path;AccessFormatter;get_full_path;get_path_with_query_string,decod;encod;escap,hit
+uvicorn_r5,CVE-2020-7694,uvicorn,True,1,True,get_path;AccessFormatter;get_full_path;get_path_with_query_string,decod;encod;escap,hit
+python-ldap,CVE-2025-61912,python-ldap,True,1,True,escape_dn_chars,decod;escap,hit
+python-ldap_r2,CVE-2025-61912,python-ldap,True,0,True,escape_dn_chars,decod;escap,hit
+python-ldap_r3,CVE-2025-61912,python-ldap,True,1,True,escape_dn_chars,decod;escap;normaliz,hit
+python-ldap_r4,CVE-2025-61912,python-ldap,True,1,False,escape_dn_chars,decod;escap,hit
+python-ldap_r5,CVE-2025-61912,python-ldap,True,1,True,escape_dn_chars,decod;escap;normaliz,hit
+lxml-html-clean2,CVE-2026-28350,lxml-html-clean,True,1,False,,decod;entit;escap,miss
+lxml-html-clean2_r2,CVE-2026-28350,lxml-html-clean,True,1,False,,decod;escap;unescape,miss
+lxml-html-clean2_r3,CVE-2026-28350,lxml-html-clean,True,2,False,__call__,decod;entit,hit
+lxml-html-clean2_r4,CVE-2026-28350,lxml-html-clean,True,1,False,,decod;encod;entit,miss
+lxml-html-clean2_r5,CVE-2026-28350,lxml-html-clean,True,1,False,__call__,decod;encod;escap,hit
+wlc,CVE-2026-22250,wlc,True,2,True,invoke_request;_should_verify_ssl,certificate;hostname;ssl,hit
+wlc_r2,CVE-2026-22250,wlc,True,3,True,_should_verify_ssl,certificate;hostname;ssl,hit
+wlc_r3,CVE-2026-22250,wlc,True,3,True,invoke_request;_should_verify_ssl,certificate;hostname;ssl,hit
+wlc_r4,CVE-2026-22250,wlc,True,3,True,invoke_request;_should_verify_ssl,certificate;hostname;ssl,hit
+wlc_r5,CVE-2026-22250,wlc,True,2,False,invoke_request;_should_verify_ssl,certificate;hostname;ssl,hit
+pypdf,CVE-2026-22691,pypdf,True,1,False,PdfReader,denial of service;exhaust;unbounded,hit
+pypdf_r2,CVE-2026-22691,pypdf,True,1,False,PdfReader;root_object,denial of service;exhaust;unbounded,hit
+pypdf_r3,CVE-2026-22691,pypdf,True,2,False,PdfReader;root_object,,miss
+pypdf_r4,CVE-2026-22691,pypdf,True,1,False,PdfReader;root_object,exhaust;unbounded,hit
+pypdf_r5,CVE-2026-22691,pypdf,True,2,False,PdfReader;root_object,unbounded,hit
+cleo,CVE-2022-42966,cleo,True,3,True,_render_cell,backtrack;catastrophic;denial of service,hit
+cleo_r2,CVE-2022-42966,cleo,True,1,False,,,miss
+cleo_r3,CVE-2022-42966,cleo,True,0,False,,,miss
+cleo_r4,CVE-2022-42966,cleo,True,1,False,_render_cell,,miss
+cleo_r5,CVE-2022-42966,cleo,True,2,False,_render_cell,backtrack;catastrophic;exponential,hit
+uvicorn,CVE-2020-7694,uvicorn,True,1,True,get_path;AccessFormatter;get_full_path,decod;escap;unescape,hit
+uvicorn_r2,CVE-2020-7694,uvicorn,True,1,True,get_path;AccessFormatter;get_full_path;get_path_with_query_string,decod;encod;escap,hit
+uvicorn_r3,CVE-2020-7694,uvicorn,True,1,True,get_path;AccessFormatter;get_full_path;get_path_with_query_string,decod;escap;unescape,hit
+uvicorn_r4,CVE-2020-7694,uvicorn,True,1,True,get_path;AccessFormatter;get_full_path;get_path_with_query_string,decod;encod;escap,hit
+uvicorn_r5,CVE-2020-7694,uvicorn,True,1,True,get_path;AccessFormatter;get_full_path;get_path_with_query_string,decod;encod;escap,hit
+python-ldap,CVE-2025-61912,python-ldap,True,1,True,escape_dn_chars,decod;escap,hit
+python-ldap_r2,CVE-2025-61912,python-ldap,True,0,True,escape_dn_chars,decod;escap,hit
+python-ldap_r3,CVE-2025-61912,python-ldap,True,1,True,escape_dn_chars,decod;escap;normaliz,hit
+python-ldap_r4,CVE-2025-61912,python-ldap,True,1,False,escape_dn_chars,decod;escap,hit
+python-ldap_r5,CVE-2025-61912,python-ldap,True,1,True,escape_dn_chars,decod;escap;normaliz,hit
+lxml-html-clean2,CVE-2026-28350,lxml-html-clean,True,1,False,,decod;entit;escap,miss
+lxml-html-clean2_r2,CVE-2026-28350,lxml-html-clean,True,1,False,,decod;escap;unescape,miss
+lxml-html-clean2_r3,CVE-2026-28350,lxml-html-clean,True,2,False,__call__,decod;entit,hit
+lxml-html-clean2_r4,CVE-2026-28350,lxml-html-clean,True,1,False,,decod;encod;entit,miss
+lxml-html-clean2_r5,CVE-2026-28350,lxml-html-clean,True,1,False,__call__,decod;encod;escap,hit
+wlc,CVE-2026-22250,wlc,True,2,True,invoke_request;_should_verify_ssl,certificate;hostname;ssl,hit
+wlc_r2,CVE-2026-22250,wlc,True,3,True,_should_verify_ssl,certificate;hostname;ssl,hit
+wlc_r3,CVE-2026-22250,wlc,True,3,True,invoke_request;_should_verify_ssl,certificate;hostname;ssl,hit
+wlc_r4,CVE-2026-22250,wlc,True,3,True,invoke_request;_should_verify_ssl,certificate;hostname;ssl,hit
+wlc_r5,CVE-2026-22250,wlc,True,2,False,invoke_request;_should_verify_ssl,certificate;hostname;ssl,hit
+pypdf,CVE-2026-22691,pypdf,True,1,False,PdfReader,denial of service;exhaust;unbounded,hit
+pypdf_r2,CVE-2026-22691,pypdf,True,1,False,PdfReader;root_object,denial of service;exhaust;unbounded,hit
+pypdf_r3,CVE-2026-22691,pypdf,True,2,False,PdfReader;root_object,,miss
+pypdf_r4,CVE-2026-22691,pypdf,True,1,False,PdfReader;root_object,exhaust;unbounded,hit
+pypdf_r5,CVE-2026-22691,pypdf,True,2,False,PdfReader;root_object,unbounded,hit

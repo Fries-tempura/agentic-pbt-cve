@@ -1,0 +1,17 @@
+litestar	litestar.stores.file	litestar	CVE-2026-25480__litestar	CVE-2026-25480
+configobj	configobj.validate	configobj	CVE-2023-26112__configobj	CVE-2023-26112
+eml-parser	eml_parser.parser	eml-parser	CVE-2026-55618__eml-parser	CVE-2026-55618
+pygments	pygments.lexers.archetype	pygments	CVE-2026-4539__pygments	CVE-2026-4539
+soupsieve	soupsieve.css_parser	soupsieve	CVE-2026-86000__soupsieve	CVE-2026-86000
+black	black.strings	black	CVE-2024-21503__black	CVE-2024-21503
+dparse	dparse.parser	dparse	CVE-2022-39280__dparse	CVE-2022-39280
+h11	h11._readers	h11	CVE-2025-43859__h11	CVE-2025-43859
+lxml-html-clean	lxml_html_clean.clean	lxml-html-clean	CVE-2026-28348__lxml-html-clean	CVE-2026-28348
+psd-tools	psd_tools.compression	psd-tools	CVE-2026-27809__psd-tools	CVE-2026-27809
+poetry	poetry.installation.wheel_installer	poetry	CVE-2026-34591__poetry	CVE-2026-34591
+cleo	cleo.ui.table	cleo	CVE-2022-42966__cleo	CVE-2022-42966
+uvicorn	uvicorn.logging	uvicorn	CVE-2020-7694__uvicorn	CVE-2020-7694
+python-ldap	ldap.dn	python-ldap	CVE-2025-61912__python-ldap	CVE-2025-61912
+lxml-html-clean2	lxml_html_clean.clean	lxml-html-clean2	CVE-2026-28350__lxml-html-clean	CVE-2026-28350
+wlc	wlc	wlc	CVE-2026-22250__wlc	CVE-2026-22250
+pypdf	pypdf._reader	pypdf	CVE-2026-22691__pypdf	CVE-2026-22691

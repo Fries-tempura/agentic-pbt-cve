@@ -1,0 +1,6 @@
+cleo	cleo.ui.table	cleo	CVE-2022-42966__cleo	CVE-2022-42966
+uvicorn	uvicorn.logging	uvicorn	CVE-2020-7694__uvicorn	CVE-2020-7694
+python-ldap	ldap.dn	python-ldap	CVE-2025-61912__python-ldap	CVE-2025-61912
+lxml-html-clean2	lxml_html_clean.clean	lxml-html-clean2	CVE-2026-28350__lxml-html-clean	CVE-2026-28350
+wlc	wlc	wlc	CVE-2026-22250__wlc	CVE-2026-22250
+pypdf	pypdf._reader	pypdf	CVE-2026-22691__pypdf	CVE-2026-22691

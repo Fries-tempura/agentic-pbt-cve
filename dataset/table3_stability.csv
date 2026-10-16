@@ -1,0 +1,18 @@
+sample,cve,defect,n_runs,hits,rate,stability
+black,CVE-2024-21503,ReDoS,5,5,5/5,稳定命中
+dparse,CVE-2022-39280,ReDoS,5,5,5/5,稳定命中
+h11,CVE-2025-43859,chunk 终止符不校验 → 请求走私,5,5,5/5,稳定命中
+litestar,CVE-2026-25480,键名碰撞 → 缓存投毒,5,5,5/5,稳定命中
+poetry,CVE-2026-34591,wheel 成员路径穿越,5,5,5/5,稳定命中
+pygments,CVE-2026-4539,ReDoS,5,5,5/5,稳定命中
+pypdf,CVE-2026-22691,/Size 驱动的无界 Root 恢复循环,5,5,5/5,稳定命中
+python-ldap,CVE-2025-61912,NUL 转义错误 → DN 解析不回来,5,5,5/5,稳定命中
+uvicorn,CVE-2020-7694,访问日志未转义 → 日志注入,5,5,5/5,稳定命中
+wlc,CVE-2026-22250,TLS 证书校验被跳过,5,5,5/5,稳定命中
+configobj,CVE-2023-26112,ReDoS,5,3,3/5,不稳定
+cleo,CVE-2022-42966,ReDoS,5,2,2/5,不稳定
+lxml-html-clean,CVE-2026-28348,CSS 转义绕过 @import 过滤,5,2,2/5,不稳定
+psd-tools,CVE-2026-27809,zlib 解压无大小上限 → ZIP 炸弹,5,2,2/5,不稳定
+eml-parser,CVE-2026-55618,HTML 实体混淆的 URL 提取不到,5,0,0/5,从未命中
+lxml-html-clean2,CVE-2026-28350,<base> 标签注入,5,0,0/5,从未命中
+soupsieve,CVE-2026-86000,ReDoS,5,0,0/5,从未命中

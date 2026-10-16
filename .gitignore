@@ -21,5 +21,5 @@ scoring_results.csv
 
 # 未经协调披露的漏洞报告 —— agent 在 eml-parser 里找到的两个真 bug,
 # 上游补丁至今未修。仓库公开,故暂不发布;要发布请先知会维护者。
-runs/emlparser_parser/bug_report_eml_parser_parser_EmlParser_*.md
-runs/emlparser_parser/bug_report_eml_parser_parser_get_valid_domain_or_ip_*.md
+runs/*eml*parser*/bug_report_eml_parser_parser_EmlParser_*.md
+runs/*eml*parser*/bug_report_eml_parser_parser_get_valid_domain_or_ip_*.md

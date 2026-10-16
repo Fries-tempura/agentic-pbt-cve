@@ -1,0 +1,66 @@
+.F..                                                                     [100%]
+=================================== FAILURES ===================================
+_________________________ test_index_server_private_ip _________________________
+
+    @given(st.sampled_from(["10.0.0.5", "192.168.1.10", "127.0.0.1", "172.16.0.3"]),
+>          st.sampled_from(["", ":8080"]))
+                   ^^^
+
+test_parser_pbt.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ip = '10.0.0.5', port = ''
+
+    @given(st.sampled_from(["10.0.0.5", "192.168.1.10", "127.0.0.1", "172.16.0.3"]),
+           st.sampled_from(["", ":8080"]))
+    def test_index_server_private_ip(ip, port):
+        url = f"http://{ip}{port}/simple/"
+>       assert Parser.parse_index_server("-i " + url) == url
+E       AssertionError: assert None == 'http://10.0.0.5/simple/'
+E        +  where None = parse_index_server(('-i ' + 'http://10.0.0.5/simple/'))
+E        +    where parse_index_server = Parser.parse_index_server
+E       Failing test case: test_index_server_private_ip(
+E           # The test always failed when commented parts were varied together.
+E           ip='10.0.0.5',  # or any other generated value
+E           port='',  # or any other generated value
+E       )
+
+test_parser_pbt.py:23: AssertionError
+=============================== warnings summary ===============================
+<unknown>:10
+  <unknown>:10: SyntaxWarning: "\S" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\S"? A raw string is also an option.
+
+<unknown>:14
+  <unknown>:14: SyntaxWarning: "\." is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\."? A raw string is also an option.
+
+<unknown>:15
+  <unknown>:15: SyntaxWarning: "\." is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\."? A raw string is also an option.
+
+<unknown>:16
+  <unknown>:16: SyntaxWarning: "\." is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\."? A raw string is also an option.
+
+<unknown>:22
+  <unknown>:22: SyntaxWarning: "\d" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\d"? A raw string is also an option.
+
+<unknown>:23
+  <unknown>:23: SyntaxWarning: "\." is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\."? A raw string is also an option.
+
+<unknown>:24
+  <unknown>:24: SyntaxWarning: "\." is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\."? A raw string is also an option.
+
+<unknown>:29
+  <unknown>:29: SyntaxWarning: "\." is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\."? A raw string is also an option.
+
+<unknown>:31
+  <unknown>:31: SyntaxWarning: "\." is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\."? A raw string is also an option.
+
+<unknown>:34
+  <unknown>:34: SyntaxWarning: "\d" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\d"? A raw string is also an option.
+
+<unknown>:36
+  <unknown>:36: SyntaxWarning: "\S" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\S"? A raw string is also an option.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED test_parser_pbt.py::test_index_server_private_ip - AssertionError: ass...
+1 failed, 3 passed, 11 warnings in 1.99s

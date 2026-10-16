@@ -1,0 +1,2 @@
+cve_id,package_name,repo_url,patch_commit,affected_ranges,vuln_functions,n_vuln_functions,clone_path,prop_seq,prop_file,prop_name,prop_statement,prop_strategy,prop_assertions,prop_outcome
+CVE-2026-34591,poetry,https://github.com/python-poetry/poetry,ed59537ac3709cfbdbf95d957de801c13872991a,">=1.4.0,<2.3.3",src/poetry/installation/wheel_installer.py::WheelDestination.write_to_fs,1,checkouts/CVE-2026-34591__poetry,1,test_wheel_installer_pbt.py,test_installed_files_stay_inside_scheme_dirs,,given(member_path),any((f.resolve().is_relative_to(d) for d in scheme_dirs)),failed
