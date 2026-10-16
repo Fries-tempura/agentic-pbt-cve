@@ -17,7 +17,7 @@ plt.rcParams["font.family"] = ["Hiragino Sans GB", "PingFang HK", "Arial Unicode
 plt.rcParams["axes.unicode_minus"] = False
 MONO = ["Menlo", "Hiragino Sans GB"]
 
-FW, FH = 17.0, 9.6
+FW, FH = 17.0, 15.0
 INK, GREY, MUTE, NEW = "#1a1a1a", "#6b7280", "#4b5563", "#c2410c"
 PAD, GAP = 0.016, 0.046
 F_TITLE, F_BODY, F_FILE = 13.5, 10.6, 10.0
@@ -149,8 +149,6 @@ PLAN = {
         step(2, 8, "判定是否命中", "三个相互独立的信号", "dataset/classify_hit.py"),
         arrow(2, "每次运行一行"),
         step(2, 9, "5 次运行归并为一档", "稳定命中 / 不稳定 / 从未命中", "dataset/aggregate.py"),
-        arrow(2, "三档分类"),
-        step(2, 10, "事前可计算的筛选量", "无需运行,用于样本预筛", "dataset/check_i3.py"),
         (None, 0.040),
         note(2, "最终产出", size=15, color=COLS[2][3], weight="bold"),
         (None, 0.010),
@@ -180,16 +178,56 @@ for xa, xb in [(0.327, 0.341), (0.660, 0.674)]:
     ax.add_patch(FancyArrowPatch((xa, ym), (xb, ym), arrowstyle="-|>",
                                  mutation_scale=19, lw=2.2, color="#6b7280", zorder=6))
 
+# ── 事前筛查表 ──
+# 它不读 runs/ 里的任何东西,只读补丁前的源码,所以能在跑任何实验之前用。
+# 画成脱离主链的一个框:之前把它编成「第 10 步」摆在阶段三末尾,等于说它是
+# 判定命中之后的下一步,而它根本不在那条链上。
+BX0, BX1 = 0.250, 0.750
+BY1 = band_bottom - 0.036
+BY0 = BY1 - (PAD * 2 + lh(14) + 0.012 + 3 * lh(10.4, 1.65) + lh(F_FILE) + 0.010)
+DASH = "#8b5cf6"
+ax.add_patch(FancyBboxPatch((BX0, BY0), BX1 - BX0, BY1 - BY0,
+                            boxstyle="round,pad=0.005,rounding_size=0.010",
+                            fc="#faf7ff", ec=DASH, lw=1.6, ls="--", zorder=2))
+ax.text(BX0 + 0.020, BY1 - 0.022, "事前筛查表", fontsize=14, fontweight="bold",
+        color=INK, va="center", zorder=4)
+ax.text(BX0 + 0.126, BY1 - 0.022, "不在主链上 · 只读补丁前的源码,不读任何运行产物",
+        fontsize=10.2, color=DASH, va="center", zorder=4)
+ax.text(BX0 + 0.020, BY1 - 0.052,
+        "由阶段三的结果总结出 I1–I5 五条限制,再把其中可计算的那些写成指标。\n"
+        "目前实现 I3:统计函数读取的自由变量。取自框架上下文的变量测试无法设定,\n"
+        "该样本不必运行。现用于事后验算,扩充数据集时用于事前筛选。",
+        fontsize=10.4, color="#374151", va="top", linespacing=1.65, zorder=4)
+ax.text(BX1 - 0.018, BY0 + PAD, "dataset/check_i3.py", fontsize=F_FILE,
+        color=DASH, ha="right", va="center", family=MONO, zorder=4)
+
+for x_band, x_box, label, ha in [(0.833, BX1, "由实验结果总结而来", "right"),
+                                 (0.167, BX0, "筛掉不值得运行的样本", "left")]:
+    ax.add_patch(FancyArrowPatch((x_band, band_bottom), (x_box, (BY0 + BY1) / 2),
+                                 connectionstyle="angle,angleA=-90,angleB=0,rad=12",
+                                 arrowstyle="-|>", mutation_scale=16, lw=1.6,
+                                 ls="--", color=DASH, zorder=6)
+                 if ha == "right" else
+                 FancyArrowPatch((x_box, (BY0 + BY1) / 2), (x_band, band_bottom),
+                                 connectionstyle="angle,angleA=0,angleB=-90,rad=12",
+                                 arrowstyle="-|>", mutation_scale=16, lw=1.6,
+                                 ls="--", color=DASH, zorder=6))
+    # 标签放到竖线旁边,不要压在线上
+    ax.text(x_band + (0.010 if ha == "left" else -0.010), band_bottom - 0.007,
+            label, fontsize=9.8, color=DASH, ha=ha, va="top", zorder=6)
+
 ax.text(0.5, 0.992, "agentic PBT × 真实 CVE:全流程与对应代码", fontsize=22,
         fontweight="bold", color=INK, ha="center", va="top")
 ax.text(0.5, 0.930,
         "将每个项目回退至补丁提交之前,使「agent 是否发现补丁所修复的缺陷」成为可判定的问题",
         fontsize=12.5, color=GREY, ha="center", va="top")
-ax.text(0.5, band_bottom - 0.030,
+ax.text(0.5, BY0 - 0.028,
         "方框右下角 = 执行该步骤的代码文件          "
-        "★ = 为使规约可追溯而新增的步骤",
+        "★ = 为使规约可追溯而新增的步骤          "
+        "虚线 = 不在主链上",
         fontsize=10.5, color=GREY, ha="center", va="top")
 
 for ext in ("png", "pdf"):
     fig.savefig(f"docs/pipeline.{ext}", dpi=200, bbox_inches="tight", facecolor="white")
-print(f"写出 docs/pipeline.png 与 .pdf  (三列底边 {bottoms})")
+assert BY0 > 0.02, f"筛查表下沿 {BY0:.3f} 跑出画布,加大 FH"
+print(f"写出 docs/pipeline.png 与 .pdf  (色带下沿 {band_bottom:.3f},筛查表 {BY0:.3f}-{BY1:.3f})")
