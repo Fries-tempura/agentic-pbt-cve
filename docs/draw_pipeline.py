@@ -32,9 +32,9 @@ ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
 fig.patch.set_facecolor("white")
 
 COLS = [
-    ("阶段一 · 建数据集", "#eef3fb", "#9db8dd", "#2f5c9e", 0.022, 0.312),
-    ("阶段二 · 跑 agent", "#fdf4e7", "#e0b473", "#b4762a", 0.355, 0.645),
-    ("阶段三 · 量结果",   "#edf7f0", "#8fc4a3", "#2f7a52", 0.688, 0.978),
+    ("阶段一 · 数据集构建", "#eef3fb", "#9db8dd", "#2f5c9e", 0.022, 0.312),
+    ("阶段二 · 实验运行", "#fdf4e7", "#e0b473", "#b4762a", 0.355, 0.645),
+    ("阶段三 · 结果度量", "#edf7f0", "#8fc4a3", "#2f7a52", 0.688, 0.978),
 ]
 Y_TOP = 0.830
 
@@ -84,11 +84,11 @@ def note(col, text, size=10, color="#374151", mono=False, weight="normal", gapsi
     return draw, h
 
 
-INNER = [("1", "看懂要测什么", 0), ("2", "读实现", 0),
-         ("3", "写下代码承诺了什么  → claims.md", 1),
-         ("4", "只据 claims.md 想性质", 1),
-         ("5", "写测试,每条标出对应哪条规约", 1),
-         ("6", "跑测试,分诊失败", 0), ("7", "写报告", 0), ("8", "下结论", 0)]
+INNER = [("1", "确定测试目标", 0), ("2", "阅读实现", 0),
+         ("3", "记录代码声明的规约  → claims.md", 1),
+         ("4", "依据 claims.md 推导性质", 1),
+         ("5", "编写测试,逐条标注所依据的规约", 1),
+         ("6", "运行测试,分类失败原因", 0), ("7", "撰写报告", 0), ("8", "给出结论", 0)]
 
 
 def agent_box():
@@ -104,7 +104,7 @@ def agent_box():
         t = y - PAD
         ax.text(x0 + 0.016, t, "6", fontsize=F_TITLE, fontweight="bold",
                 color=accent, va="top", zorder=4)
-        ax.text(x0 + 0.040, t, "agent 照着剧本走 8 步", fontsize=F_TITLE,
+        ax.text(x0 + 0.040, t, "agent 按提示词执行 8 步", fontsize=F_TITLE,
                 fontweight="bold", color=INK, va="top", zorder=4)
         ax.text(x1 - 0.014, t, "hypo_v2.md", fontsize=F_FILE, color=accent,
                 ha="right", va="top", family=MONO, fontweight="bold", zorder=4)
@@ -123,34 +123,34 @@ def agent_box():
 
 
 PLAN = {
-    0: [step(0, 1, "拉漏洞公告", "筛出有 CVE、有修复提交的", "dataset/build_dataset.py"),
+    0: [step(0, 1, "获取漏洞公告", "保留附 CVE 编号与修复提交的记录", "dataset/build_dataset.py"),
         arrow(0, "2942 行 / 694 个包"),
-        step(0, 2, "定位被改的函数", "在打补丁之前的源码上解析", "dataset/enrich_functions.py"),
+        step(0, 2, "定位受影响函数", "解析补丁提交之前的源码", "dataset/enrich_functions.py"),
         arrow(0, "vuln_functions 列"),
-        step(0, 3, "剔除平台假阴性", "只在 Windows 成立的标掉", "dataset/platform_scan.py"),
+        step(0, 3, "排除平台相关样本", "标记仅在 Windows 成立的缺陷", "dataset/platform_scan.py"),
         arrow(0, "风险样本 17%"),
-        step(0, 4, "退回修复前一刻", "切到修复提交的父提交", "dataset/materialize.py"),
+        step(0, 4, "回退至补丁前版本", "检出修复提交的父提交", "dataset/materialize.py"),
         (None, 0.040),
         note(0, "17 个样本", size=15, color=COLS[0][3], weight="bold"),
         (None, 0.010),
-        note(0, "一份修复前的源码 + 一个被指向的模块\n+ 一条已知的标准答案")],
-    1: [step(1, 5, "发起一次运行", "串行,一次一个,撞配额就重试",
+        note(0, "补丁前的源码 + 指定的目标模块\n+ 已知的标准答案")],
+    1: [step(1, 5, "发起单次运行", "串行调度,配额超限后自动重试",
              "runs/serial.sh · go.sh"),
         arrow(1, 'claude -p "/hypo_v2 <模块>"'),
         agent_box(),
-        arrow(1, "留下四样东西"),
-        note(1, "claims.md            代码承诺了什么\n"
+        arrow(1, "单次运行的产物"),
+        note(1, "claims.md            代码声明的规约\n"
                 "test_*.py            性质测试\n"
                 "bug_report_*.md      缺陷报告与复现脚本\n"
-                "claude_result.json   回合数与花费", size=10, mono=True)],
-    2: [step(2, 7, "还原每条性质", "含通过的、和压根没想到的",
+                "claude_result.json   运行回合数与开销", size=10, mono=True)],
+    2: [step(2, 7, "还原全部提出的性质", "不限于失败的,通过的亦计入",
              "dataset/extract_properties.py"),
         arrow(2, "每条性质一行"),
-        step(2, 8, "判定有没有找到", "三个各自独立的信号", "dataset/classify_hit.py"),
+        step(2, 8, "判定是否命中", "三个相互独立的信号", "dataset/classify_hit.py"),
         arrow(2, "每次运行一行"),
-        step(2, 9, "5 次折成一档", "稳定命中 / 不稳定 / 从未命中", "dataset/aggregate.py"),
+        step(2, 9, "5 次运行归并为一档", "稳定命中 / 不稳定 / 从未命中", "dataset/aggregate.py"),
         arrow(2, "三档分类"),
-        step(2, 10, "事前可算的筛选量", "不跑也能算,用来挑样本", "dataset/check_i3.py"),
+        step(2, 10, "事前可计算的筛选量", "无需运行,用于样本预筛", "dataset/check_i3.py"),
         (None, 0.040),
         note(2, "最终产出", size=15, color=COLS[2][3], weight="bold"),
         (None, 0.010),
@@ -183,11 +183,11 @@ for xa, xb in [(0.327, 0.341), (0.660, 0.674)]:
 ax.text(0.5, 0.992, "agentic PBT × 真实 CVE:全流程与对应代码", fontsize=22,
         fontweight="bold", color=INK, ha="center", va="top")
 ax.text(0.5, 0.930,
-        "把每个项目退回修复前一刻,「agent 有没有找到补丁修的那个缺陷」就有了标准答案",
+        "将每个项目回退至补丁提交之前,使「agent 是否发现补丁所修复的缺陷」成为可判定的问题",
         fontsize=12.5, color=GREY, ha="center", va="top")
 ax.text(0.5, band_bottom - 0.030,
-        "方框右下角 = 执行这一步的代码文件          "
-        "★ = 为「让规约可追溯」新增的步骤",
+        "方框右下角 = 执行该步骤的代码文件          "
+        "★ = 为使规约可追溯而新增的步骤",
         fontsize=10.5, color=GREY, ha="center", va="top")
 
 for ext in ("png", "pdf"):
