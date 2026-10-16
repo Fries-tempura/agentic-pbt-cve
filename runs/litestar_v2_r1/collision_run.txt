@@ -1,0 +1,82 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________________________ test_distinct_keys_independent ________________________
+  + Exception Group Traceback (most recent call last):
+  |   File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/runs/litestar_v2_r1/test_file_store.py", line 30, in test_distinct_keys_independent
+  |     @given(keys, keys, vals, vals)
+  |                    ^^^
+  |   File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/envs/litestar/lib/python3.14/site-packages/hypothesis/core.py", line 2295, in wrapped_test
+  |     raise the_error_hypothesis_found
+  | ExceptionGroup: Hypothesis found 2 distinct failures. (2 sub-exceptions)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/runs/litestar_v2_r1/test_file_store.py", line 38, in test_distinct_keys_independent
+    |     assert run(go) == (v1, v2)
+    |            ~~~^^^^
+    |   File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/runs/litestar_v2_r1/test_file_store.py", line 16, in run
+    |     return asyncio.run(coro_fn(store))
+    |            ~~~~~~~~~~~^^^^^^^^^^^^^^^^
+    |   File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 205, in run
+    |     return runner.run(main)
+    |            ~~~~~~~~~~^^^^^^
+    |   File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    |     return self._loop.run_until_complete(task)
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+    |   File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    |     return future.result()
+    |            ~~~~~~~~~~~~~^^
+    |   File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/runs/litestar_v2_r1/test_file_store.py", line 37, in go
+    |     return await s.get(k1), await s.get(k2)
+    |                             ^^^^^^^^^^^^^^^
+    |   File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/dataset/checkouts/CVE-2026-25480__litestar/litestar/stores/file.py", line 122, in get
+    |     storage_obj = await self._load_from_path(path)
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/dataset/checkouts/CVE-2026-25480__litestar/litestar/stores/file.py", line 63, in _load_from_path
+    |     data = await path.read_bytes()
+    |            ^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/envs/litestar/lib/python3.14/site-packages/anyio/_core/_fileio.py", line 827, in read_bytes
+    |     return await to_thread.run_sync(self._path.read_bytes, limiter=self._limiter)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/envs/litestar/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    |     return await get_async_backend().run_sync_in_worker_thread(
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/envs/litestar/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2706, in run_sync_in_worker_thread
+    |     return await future
+    |            ^^^^^^^^^^^^
+    |   File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/envs/litestar/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1100, in run
+    |     result = context.run(func, *args)
+    |   File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    |     with self.open(mode='rb', buffering=0) as f:
+    |          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    |     return io.open(self, mode, buffering, encoding, errors, newline)
+    |            ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    | OSError: [Errno 63] File name too long: '/var/folders/wn/n89t0zhj0l5896bhtnvcqqnm0000gn/T/tmpfkoht1dp/s/000000000000000000000005858585812312312312312312312312312312312332776327763277232769327693276932769182604182604182604182604182604182604182604182604182604182604182604182604U768E77232774327743277432774327743277432774820382038203820382034646460826036182455204'
+    | Failing test case: test_distinct_keys_independent(
+    |     k1='0',
+    |     k2='00000000000000000000000::::{{{{{{{{{{{¨¨¯´´´´¼¼¼¼¼¼¼¼¼¼¼¼ÙĒ˘˘˘˘˘˘˘\u200b\u200b\u200b\u200b\u200b…↉≠\ud7a4',
+    |     v1=b'',
+    |     v2=b'\x00',
+    | )
+    +---------------- 2 ----------------
+    | Traceback (most recent call last):
+    |   File "/Users/auderyliu/Documents/NTU/project/agentic-pbt-main/runs/litestar_v2_r1/test_file_store.py", line 38, in test_distinct_keys_independent
+    |     assert run(go) == (v1, v2)
+    | AssertionError: assert (b'', None) == (b'', b'\x00')
+    |   
+    |   At index 1 diff: None != b'\x00'
+    |   Use -v to get more diff
+    | Failing test case: test_distinct_keys_independent(
+    |     k1='0',
+    |     k2='{¡{{{¨{0««¯´´0´´00¼/0ÅÍÎÏÒÓÔÚßåæç÷øıœƒˆ˘˙˚˛˚˚˝Ωπ–‘“„†•…‰™∂∆∑√∞∫≈≠≤≥◊☃\uf8ff',
+    |     v1=b'',
+    |     v2=b'\x00',
+    | )
+    +------------------------------------
+=========================== short test summary info ============================
+FAILED test_file_store.py::test_distinct_keys_independent - ExceptionGroup: H...
+1 failed in 0.51s
