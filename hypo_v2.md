@@ -208,12 +208,45 @@ If, while writing the test, you find the claim cannot be expressed as written, *
 amend the claim** — do not quietly test something narrower. Add a line to that record saying
 what you changed and why.
 
-- Use smart Hypothesis strategies - constrain inputs to the domain intelligently
 - Write strategies that are both:
   - sound: tests only inputs expected by the code
   - complete: tests all inputs expected by the code
   If soundness and completeness are in conflict, prefer writing sound but incomplete properties. Do not chase completeness: 90% is good enough.
 - Focus on a few high-impact properties, rather than comprehensive codebase coverage.
+
+**Two decisions about the inputs decide whether the search ever reaches a counterexample.**
+A correct property whose strategy cannot produce a witness passes forever, and a passing test
+is indistinguishable from correct code. Spend thought here, not only on the assertion.
+
+**Check many instances of the relation per example, not one.** A claim about a *pair* — two
+distinct keys, two orderings, an element and its successor — can be written to draw one pair,
+or to draw a list and check every pair inside it. The second does far more work per example:
+a list of 8 covers 28 pairs, so the same `max_examples` explores roughly 28 times as many
+pairs.
+
+```python
+# one pair per example
+@given(k1=keys, k2=keys)
+def test_no_collision(k1, k2):
+    assume(k1 != k2)
+    assert encode(k1) != encode(k2)
+
+# up to 28 pairs per example — prefer this
+@given(ks=st.lists(keys, unique=True, min_size=2, max_size=8))
+def test_no_collision(ks):
+    assert len({encode(k) for k in ks}) == len(ks)
+```
+
+**Pick the alphabet from the mechanism, not from the type.** `st.text()` spends most of its
+draws on CJK, emoji and control characters. If the claim turns on how one specific class of
+character is handled — a separator, a digit, a character the code escapes or normalises —
+say so in the strategy: `st.text(alphabet="ab-_.0123456789", max_size=8)`. Read the
+implementation for which characters it treats specially and build the alphabet out of those.
+
+**If a property passes, ask whether it could have failed.** Before recording "tested and
+passed", check that the strategy can in principle produce a value that violates the claim.
+Construct one such input by hand and confirm the property fails on it. A property that cannot
+fail has tested nothing, and reporting it as passed is a false negative.
 
 A basic Hypothesis test looks like this:
 
