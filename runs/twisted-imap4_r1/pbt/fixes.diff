@@ -1,0 +1,42 @@
+--- a/src/twisted/mail/imap4.py	2026-10-28 13:12:41
++++ b/src/twisted/mail/imap4.py	2026-10-28 13:13:34
+@@ -16,6 +16,7 @@
+ """
+ from __future__ import annotations
+ 
++import base64
+ import binascii
+ import codecs
+ import copy
+@@ -4626,9 +4627,10 @@
+     esc = _matchingString("\x5c", s)
+     empty = _matchingString("", s)
+     nil = _matchingString("NIL", s)
+-    for i, c in enumerate(iterbytes(s)):
++    escaped = False
++    for c in iterbytes(s):
+         if c == qu:
+-            if i and s[i - 1 : i] == esc:
++            if escaped:
+                 word.pop()
+                 word.append(qu)
+             elif not inQuote:
+@@ -4654,6 +4656,7 @@
+             inWord = False
+         elif inWord or inQuote:
+             word.append(c)
++        escaped = c == esc and not escaped
+ 
+     if inQuote:
+         raise MismatchedQuoting(s)
+@@ -6097,8 +6100,8 @@
+ 
+ 
+ def modified_base64(s):
+-    s_utf7 = s.encode("utf-7")
+-    return s_utf7[1:-1].replace(b"/", b",")
++    s_utf16 = s.encode("utf-16-be")
++    return base64.b64encode(s_utf16).rstrip(b"=").replace(b"/", b",")
+ 
+ 
+ def modified_unbase64(s):

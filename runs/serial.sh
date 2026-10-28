@@ -2,12 +2,13 @@
 # 串行跑,一次一个。撞上限就等 10 分钟重试,最多重试 6 次。
 #   bash runs/serial.sh               -> hypo 基线,第 2..5 次重复
 #   bash runs/serial.sh hypo_v2 1 5   -> hypo_v2 消融,第 1..5 次,写进 runs/<name>_v2_rN
+#   bash runs/serial.sh hypo 1 5 runs/samples_gitlab.tsv  -> 换一份样本清单
 R=/Users/auderyliu/Documents/NTU/project/agentic-pbt-main
 cd "$R"
-CMD="${1:-hypo}"; FROM="${2:-2}"; TO="${3:-5}"
+CMD="${1:-hypo}"; FROM="${2:-2}"; TO="${3:-5}"; LIST_FILE="${4:-runs/samples.tsv}"
 # 两版的产物必须分开存放,否则 v2 会覆盖已经跑完的 85 次基线。
 SUF=""; [ "$CMD" != "hypo" ] && SUF="_v2"
-LIST=$(cat runs/samples.tsv)
+LIST=$(cat "$LIST_FILE")
 for rep in $(seq "$FROM" "$TO"); do
   while IFS=$'\t' read -r name mod venv ckt cve; do
     [ -z "$name" ] && continue

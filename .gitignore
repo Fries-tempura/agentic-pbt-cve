@@ -24,3 +24,7 @@ scoring_results.csv
 # 两次教训:按文件名列会漏,按 runs/<目录>/ 一层列也会漏 —— agent 常自建
 # work/ 或 pbt/ 子目录再往里写。所以不限定路径,按文件名在任意层级匹配。
 bug_report_eml_parser_*.md
+
+# agent 跑实验时自己写的临时探测脚本。流水线不依赖,而且其中有故意触发
+# 灾难性回溯的(eml-parser 那个构造了 "a."*3000),误跑会把 CPU 占满。
+runs/**/probe*.py
