@@ -100,7 +100,7 @@ The five fields, and why each is there:
 | field | what goes in it |
 |---|---|
 | `evidence` | Where you read it, and the text **quoted verbatim**. Do not paraphrase. |
-| `source` | One of: docstring, comment, type hint, error message, caller usage, existing test, structure, mathematics |
+| `source` | One of: docstring, comment, type hint, error message, caller usage, structure, mathematics, reference, **implicit** |
 | `reading` | **How you got from that text to the claim.** What does it rule out? What does it leave open? This is the step that goes wrong silently, so it is the step that must be written down. |
 | `claim` | One sentence: what must hold after the call returns. |
 | `strength` | Did you state it as strongly as the evidence allows? If you chose a weaker form, say which stronger form you passed over and why. |
@@ -110,27 +110,59 @@ Rules:
 - **State the claim in the strongest form the evidence supports.** A weaker claim is still
   true, so its test still passes — on code that violates the documented behaviour. The test
   looks green while having checked something else.
-- If you cannot point at evidence, **do not write a claim**. An invented claim is the main
-  source of false alarms.
+- If you cannot point at evidence, **do not write a claim** — with one exception, below.
+  An invented claim is the main source of false alarms.
+- The exception is `source: implicit`. Some claims hold of *every* correct implementation
+  and are therefore never written down anywhere: the call must not raise an exception the
+  API does not document, and its cost must scale with the input. Nothing will ever claim
+  these in prose, so demanding a quote excludes the entire class. Record them with
+  `evidence: —` and a `reading` naming which universal expectation you are relying on.
 - `structure` and `mathematics` need no quote, but still need a `reading`: a function named
   `encode`/`decode` claims a round trip; a key-to-filename mapping claims injectivity; `abs`
   claims idempotence. Say which one you are relying on and why it applies here.
-- A claim about *cost* is a claim. "Parses a check string" implies the parse terminates in
-  time proportional to the input, not quadratically or worse. Record it like any other.
+- **A claim about cost is a claim.** A function that builds a regular expression out of its
+  input, a parser with nested quantifiers, a decompressor with no size cap — each claims,
+  implicitly, that the work is proportional to the input and not quadratic or worse. Record
+  it like any other claim, with `source: implicit`.
 
 ### 4. Turn claims into properties
 
 Work from `claims.md`, not from the code again. Each claim is already decided; what is left
-is how to check it. For each claim, name the pattern it fits:
+is how to check it. For each claim, name **which source its assertion comes from**:
 
-- **Invariants**: `len(filter(x)) <= len(x)`, `set(sort(x)) == set(x)`
-- **Round-trip properties**: `decode(encode(x)) = x`, `parse(format(x)) = x`
-- **Inverse operations**: `add/remove`, `push/pop`, `create/destroy`
-- **Multiple implementations**: fast vs reference, optimized vs simple
-- **Mathematical properties**: idempotence `f(f(x)) = f(x)`, commutativity `f(x,y) = f(y,x)`
-- **Confluence**: if the order of function application doesn't matter (eg in compiler optimization passes)
-- **Metamorphic properties**: some relationship between `f(x)` and `g(x)` holds, even without knowing the correct value for `f(x)`. For example, `sin(π − x) = sin(x)` for all x.
-- **Single entry point**: for libraries with 1-2 entrypoints, test that calling it on valid inputs doesn't crash (no specific property!). Common in e.g. parsers.
+These are grouped by **where the assertion comes from**, not by what it looks like. The
+shape follows once the source is settled, and grouping this way makes it visible when a
+whole source has gone unused — which is the usual reason a defect is missed.
+
+1. **Documented behaviour.** A postcondition stated in the docstring, a comment, an error
+   message, or implied by how callers use it. The commonest source.
+
+2. **Algebraic relations.** True by the names and the structure, no prose needed: round trip
+   (`decode(encode(x)) == x`, `parse(format(x)) == x`), inverse pairs (`add`/`remove`,
+   `push`/`pop`), idempotence (`f(f(x)) == f(x)`), commutativity, confluence, and invariants
+   (`len(filter(x)) <= len(x)`, `set(sort(x)) == set(x)`).
+
+3. **Metamorphic relations.** A relation between `f(x)` and `f(g(x))` that holds without
+   knowing either value — `sin(π − x) == sin(x)`. Reach for this when no single output can
+   be predicted.
+
+4. **A reference implementation.** Compare against something independent that computes the
+   same thing: the standard library, another package, or a slow obvious version you write
+   yourself. This is the only source that yields a full answer rather than a relation, and
+   it is the most neglected one — check whether a reference exists before settling for a
+   weaker source.
+
+5. **Implicit — must not crash.** No input the API accepts should raise an exception it does
+   not document.
+
+6. **Implicit — must not hang.** Cost must scale with the input. Time the call and assert a
+   bound. **Nothing in the code will ever state this in words**, so there is no quote to
+   find; it holds of every correct implementation. Skip it for lack of documentation and
+   every defect of this class stays invisible — a regex assembled from user input, a parser
+   with nested quantifiers, a decompressor with no size cap.
+
+**Off limits: the project's own test suite.** Those tests encode what the code does now,
+including whatever is wrong with it. Do not read them for properties.
 
 If there are no candidate properties in $ARGUMENTS, do not search outside of the specified function, module, or file. Instead, exit with "No testable properties found in $ARGUMENTS".
 
