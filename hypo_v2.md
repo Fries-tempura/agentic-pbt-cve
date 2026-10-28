@@ -100,7 +100,7 @@ The five fields, and why each is there:
 | field | what goes in it |
 |---|---|
 | `evidence` | Where you read it, and the text **quoted verbatim**. Do not paraphrase. |
-| `source` | One of: docstring, comment, type hint, error message, caller usage, structure, mathematics, reference, **implicit** |
+| `source` | One of: docstring, comment, assertion, type hint, error message, caller usage, structure, mathematics, sequence, reference, **implicit** |
 | `reading` | **How you got from that text to the claim.** What does it rule out? What does it leave open? This is the step that goes wrong silently, so it is the step that must be written down. |
 | `claim` | One sentence: what must hold after the call returns. |
 | `strength` | Did you state it as strongly as the evidence allows? If you chose a weaker form, say which stronger form you passed over and why. |
@@ -137,25 +137,39 @@ whole source has gone unused — which is the usual reason a defect is missed.
 1. **Documented behaviour.** A postcondition stated in the docstring, a comment, an error
    message, or implied by how callers use it. The commonest source.
 
-2. **Algebraic relations.** True by the names and the structure, no prose needed: round trip
+2. **Assertions and contracts already in the code.** An `assert`, a type annotation, an
+   explicit precondition check, a raise on a rejected input. These are the author's own
+   checks, stated in code rather than prose, and they are more precise than any docstring:
+   a parameter annotated `str` claims no other type is accepted, and a guard that raises on
+   a negative length claims lengths are non-negative. Distinct from source 1, which is prose.
+
+3. **Algebraic relations.** True by the names and the structure, no prose needed: round trip
    (`decode(encode(x)) == x`, `parse(format(x)) == x`), inverse pairs (`add`/`remove`,
    `push`/`pop`), idempotence (`f(f(x)) == f(x)`), commutativity, confluence, and invariants
    (`len(filter(x)) <= len(x)`, `set(sort(x)) == set(x)`).
 
-3. **Metamorphic relations.** A relation between `f(x)` and `f(g(x))` that holds without
+4. **Order of operations.** Some objects admit a call only in certain states: a stream must
+   be opened before it is read and closed after, a lock released only once, a transaction
+   committed before the connection drops. The claim is about *sequences*, not about any one
+   call, so no single-call property can express it. Hypothesis tests this with
+   `RuleBasedStateMachine`: declare each operation as a `@rule`, state what must stay true
+   as an invariant, and it searches for the sequence that breaks it. Reach for this whenever
+   the target keeps state between calls.
+
+5. **Metamorphic relations.** A relation between `f(x)` and `f(g(x))` that holds without
    knowing either value — `sin(π − x) == sin(x)`. Reach for this when no single output can
    be predicted.
 
-4. **A reference implementation.** Compare against something independent that computes the
+6. **A reference implementation.** Compare against something independent that computes the
    same thing: the standard library, another package, or a slow obvious version you write
    yourself. This is the only source that yields a full answer rather than a relation, and
    it is the most neglected one — check whether a reference exists before settling for a
    weaker source.
 
-5. **Implicit — must not crash.** No input the API accepts should raise an exception it does
+7. **Implicit — must not crash.** No input the API accepts should raise an exception it does
    not document.
 
-6. **Implicit — must not hang.** Cost must scale with the input. Time the call and assert a
+8. **Implicit — must not hang.** Cost must scale with the input. Time the call and assert a
    bound. **Nothing in the code will ever state this in words**, so there is no quote to
    find; it holds of every correct implementation. Skip it for lack of documentation and
    every defect of this class stays invisible — a regex assembled from user input, a parser
@@ -367,6 +381,40 @@ For a comprehensive reference:
 - **Strategies reference**: https://hypothesis.readthedocs.io/en/latest/reference/strategies.html
 - **NumPy strategies**: https://hypothesis.readthedocs.io/en/latest/reference/strategies.html#numpy
 - **Pandas strategies**: https://hypothesis.readthedocs.io/en/latest/reference/strategies.html#pandas
+
+### Testing a sequence of calls
+
+For source 4 (order of operations). Each `@rule` is one operation; Hypothesis composes them
+into sequences and shrinks the failing one down to the shortest sequence that still fails.
+
+```python
+from hypothesis.stateful import RuleBasedStateMachine, rule, invariant, precondition
+
+class StoreMachine(RuleBasedStateMachine):
+    def __init__(self):
+        super().__init__()
+        self.store = Store()
+        self.model = {}          # what the store should contain
+
+    @rule(k=st.text(min_size=1), v=st.binary())
+    def put(self, k, v):
+        self.store.set(k, v)
+        self.model[k] = v
+
+    @rule(k=st.text(min_size=1))
+    def drop(self, k):
+        self.store.delete(k)
+        self.model.pop(k, None)
+
+    @invariant()
+    def matches_model(self):
+        assert dict(self.store.items()) == self.model
+
+TestStore = StoreMachine.TestCase
+```
+
+Use `@precondition(lambda self: ...)` to keep a rule from firing in a state where it is not
+legal — that is how "read only after open" is expressed.
 
 ### Rare but useful strategies
 
