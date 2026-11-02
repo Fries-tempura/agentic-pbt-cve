@@ -94,6 +94,7 @@ def main():
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--csv", type=Path, default=Path(__file__).parent / "dataset.csv")
     ap.add_argument("--tier", default="", help="only materialize these tiers")
+    ap.add_argument("--cve", default="", help="comma-separated CVE ids; overrides --tier")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--force", action="store_true", help="re-clone even if present")
@@ -106,9 +107,13 @@ def main():
     fields = list(rows[0].keys()) + [c for c in NEW_COLS if c not in rows[0]]
     tiers = {t.strip().upper() for t in args.tier.split(",") if t.strip()}
 
+    cves = {c.strip().upper() for c in args.cve.split(",") if c.strip()}
     todo = []
     for r in rows:
-        if tiers and r["pbt_tier"] not in tiers:
+        if cves:
+            if r["cve_id"].upper() not in cves:
+                continue
+        elif tiers and r["pbt_tier"] not in tiers:
             continue
         if args.require_functions and r.get("enrich_status") != "ok":
             continue

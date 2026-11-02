@@ -254,6 +254,11 @@ def main():
     ap.add_argument("--out", type=Path, default=None, help="default: overwrite --csv")
     ap.add_argument("--tier", default="", help="only enrich these tiers, e.g. A")
     ap.add_argument("--cve", default="", help="comma-separated CVE ids; overrides --tier")
+    ap.add_argument("--package", default="",
+                    help="comma-separated package names; overrides --tier. For sizing up a "
+                         "candidate project: how many of its advisories resolve to Python "
+                         "functions at all is the cheapest way to tell a pure-Python target "
+                         "from one whose vulnerable code is C.")
     ap.add_argument("--limit", type=int, default=0, help="only enrich the first N matching rows")
     ap.add_argument("--workers", type=int, default=6)
     args = ap.parse_args()
@@ -263,7 +268,10 @@ def main():
 
     tiers = {t.strip().upper() for t in args.tier.split(",") if t.strip()}
     cves = {c.strip().upper() for c in args.cve.split(",") if c.strip()}
-    if cves:
+    pkgs = {p.strip().lower() for p in args.package.split(",") if p.strip()}
+    if pkgs:
+        todo = [r for r in rows if r["package_name"].lower() in pkgs]
+    elif cves:
         # an explicit CVE list is a re-run request: ignore enrich_status so a row
         # can be refreshed, and ignore --tier.
         todo = [r for r in rows if r["cve_id"].upper() in cves]
